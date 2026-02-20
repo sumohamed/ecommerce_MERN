@@ -3,6 +3,7 @@ import mongoose from "mongoose";
 import path from "node:path";
 import userRoute from "./routes/userRoute";
 import productsRoute from "./routes/productsRoute";
+import shoppingCartRoute from "./routes/shoppingCartRoute";
 import { seedInitialProducts } from "./services/productServices";
 
 const app = express();
@@ -26,6 +27,7 @@ seedInitialProducts();
 // Endpoint DB routes
 app.use("/user", userRoute);
 app.use("/products", productsRoute);
+app.use("/cart", shoppingCartRoute);
 
 // Server runner
 app.listen(port, () =>
