@@ -5,13 +5,14 @@ import {
 	updateItemInCart,
 	deleteItemInCart,
 	clearShoppingCart,
+	checkoutShoppingCart,
 } from "../services/shoppingCartService";
 import validateJWT from "../middleware/validateJWT";
 import { ExtendRequest } from "../types/ExtendRequest";
 
 const router = express.Router();
 
-// Get User active cart
+// 1. Get User active cart
 router.get("/", validateJWT, async (req: ExtendRequest, res) => {
 	// get userId from validateJWT data..
 	const userId = req?.user?._id;
@@ -21,7 +22,7 @@ router.get("/", validateJWT, async (req: ExtendRequest, res) => {
 	res.status(200).send(cart);
 });
 
-// Post Items into shopping cart
+// 2. Post Items into shopping cart
 router.post("/items", validateJWT, async (req: ExtendRequest, res) => {
 	// get userId from validateJWT data..
 	const userId = req?.user?._id;
@@ -37,7 +38,7 @@ router.post("/items", validateJWT, async (req: ExtendRequest, res) => {
 	res.status(response.statusCode).send(response.data);
 });
 
-// Update item into shopping cart
+// 3. Update item into shopping cart
 router.put("/items", validateJWT, async (req: ExtendRequest, res) => {
 	const userId = req?.user?._id;
 	const { productId, quantity } = req.body;
@@ -45,7 +46,7 @@ router.put("/items", validateJWT, async (req: ExtendRequest, res) => {
 	res.status(response.statusCode).send(response.data);
 });
 
-// Delete item from shopping cart
+// 4. Delete item from shopping cart
 router.delete(
 	"/items/:productId",
 	validateJWT,
@@ -57,10 +58,18 @@ router.delete(
 	},
 );
 
-// Clear whole shopping cart
+// 5. Clear whole shopping cart
 router.delete("/", validateJWT, async (req: ExtendRequest, res) => {
 	const userId = req?.user?._id; // user id
 	const response = await clearShoppingCart({ userId });
+	res.status(response.statusCode).send(response.data);
+});
+
+// 6. Checkout shopping cart [change active to completed for order]
+router.post("/checkout", validateJWT, async (req: ExtendRequest, res) => {
+	const userId = req?.user?._id; // user id
+	const { address } = req.body;
+	const response = await checkoutShoppingCart({ userId, address });
 	res.status(response.statusCode).send(response.data);
 });
 

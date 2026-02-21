@@ -1,3 +1,4 @@
+import { IOrderItem, orderModel } from "../models/orderMode";
 import productModel from "../models/productModel";
 import shoppingCartModel from "../models/shoppingCartModel";
 
@@ -173,4 +174,55 @@ export const clearShoppingCart = async ({
 	const updatedCart = await cart.save();
 
 	return { data: updatedCart, statusCode: 200 };
+};
+
+// 7. Checkout -> convert status from "active" to "completed"
+interface checkoutShoppingCartParams {
+	userId: string;
+	address: string;
+}
+export const checkoutShoppingCart = async ({
+	userId,
+	address,
+}: checkoutShoppingCartParams) => {
+	const cart = await getActiveShoppingCartForUser({ userId });
+	const orderItems: IOrderItem[] = [];
+
+	// check for address
+	if (!address) {
+		return { data: "Please, add your address", statusCode: 400 };
+	}
+
+	// create order items
+	for (const item of cart.items) {
+		const product = await productModel.findById(item.product);
+
+		if (!product) {
+			return { data: "Product not Fount", statusCode: 400 };
+		}
+
+		const orderItem: IOrderItem = {
+			productTitle: product.title,
+			productImage: product.image,
+			quantity: item.quantity,
+			unitPrice: item.unitPrice,
+		};
+
+		orderItems.push(orderItem);
+	}
+
+	// create order itself
+	const order = await orderModel.create({
+		orderItems,
+		userId,
+		total: cart.totalAmount,
+		address,
+	});
+
+	await order.save();
+
+	// Update cart Status to be Completed
+	cart.status = "completed";
+	await cart.save();
+	return { data: order, statusCode: 201 };
 };
