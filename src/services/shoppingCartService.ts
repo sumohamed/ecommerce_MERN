@@ -119,3 +119,58 @@ export const updateItemInCart = async ({
 	const updatedCart = await cart.save();
 	return { data: updatedCart, statusCode: 200 };
 };
+
+//5. Delete Item from shopping cart
+interface deleteItemInCartParams {
+	productId: any;
+	userId: string;
+}
+export const deleteItemInCart = async ({
+	userId,
+	productId,
+}: deleteItemInCartParams) => {
+	// Get the active cart
+	const cart = await getActiveShoppingCartForUser({ userId });
+
+	// check if item already exists in cart
+	const existsInCart = cart.items.find(
+		(p) => p.product.toString() === productId,
+	);
+	if (!existsInCart) {
+		return { data: "item doesn't exists in cart", statusCode: 400 };
+	}
+
+	// Filter the deleted item
+	const newCartItems = cart.items.filter(
+		(p) => p.product.toString() !== productId,
+	);
+
+	let total = newCartItems.reduce((sum, product) => {
+		sum += product.quantity * product.unitPrice;
+		return sum;
+	}, 0);
+
+	cart.items = newCartItems;
+	cart.totalAmount = total;
+
+	// Update and return the new cart
+	const updatedCart = await cart.save();
+	return { data: updatedCart, statusCode: 200 };
+};
+
+// 6. Clear whole shopping cart
+interface clearShoppingCartParams {
+	userId: string;
+}
+export const clearShoppingCart = async ({
+	userId,
+}: clearShoppingCartParams) => {
+	// Get the active cart
+	const cart = await getActiveShoppingCartForUser({ userId });
+	cart.items = [];
+	cart.totalAmount = 0;
+
+	const updatedCart = await cart.save();
+
+	return { data: updatedCart, statusCode: 200 };
+};
