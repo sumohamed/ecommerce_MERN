@@ -1,6 +1,7 @@
+import productModel from "../models/productModel";
 import shoppingCartModel from "../models/shoppingCartModel";
 
-// Create new shopping cart -> only if user has none
+// 1. Create new shopping cart -> only if user has none
 interface createShoppingCartParams {
 	userId: string;
 }
@@ -10,6 +11,7 @@ const createShoppingCart = async ({ userId }: createShoppingCartParams) => {
 	return cart; // return cart...
 };
 
+// 2. Get Active cart from database
 interface getActiveShoppingCartParams {
 	userId: string;
 }
@@ -22,4 +24,46 @@ export const getActiveShoppingCartForUser = async ({
 		cart = await createShoppingCart({ userId }); // create if no cart in DB
 	}
 	return cart; // return
+};
+
+// 3. Adding Items to shopping cart
+interface addItemToShoppingCartParams {
+	productId: any;
+	quantity: number;
+	userId: string;
+}
+export const addItemToShoppingCart = async ({
+	productId,
+	quantity,
+	userId,
+}: addItemToShoppingCartParams) => {
+	// Get the active cart
+	const cart = await getActiveShoppingCartForUser({ userId });
+
+	// check if item already exists in cart
+	const existsInCart = cart.items.find(
+		(p) => p.product.toString() === productId,
+	);
+	if (existsInCart) {
+		return { data: "item already exists in cart", statusCode: 400 };
+	}
+
+	// if item not found in cart add it
+	const product = await productModel.findById(productId);
+
+	if (!product) {
+		return { data: "Product not Found", statusCode: 400 };
+	}
+
+	if (product.stock < quantity) {
+		return { data: "Low stock for this product", statusCode: 400 };
+	}
+
+	cart.items.push({ product: productId, unitPrice: product.price, quantity });
+
+	// Upate total Amount of cart
+	cart.totalAmount += product.price * quantity;
+
+	const updatedCart = await cart.save();
+	return { data: updatedCart, statusCode: 201 };
 };
