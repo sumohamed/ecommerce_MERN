@@ -1,2 +1,4 @@
 guide
 node_modules
+
+.env

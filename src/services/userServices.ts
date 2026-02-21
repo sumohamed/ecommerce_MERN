@@ -3,10 +3,8 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 
 // Generate JWT secret key
-const SECRET_KEY =
-	"38a0028a360286c8f9897efeabb66b7024826b775133fa22982d7dec73ec0231";
 const generateJWT = (data: any) => {
-	return jwt.sign(data, SECRET_KEY);
+	return jwt.sign(data, process.env.SECRET_KEY || "");
 };
 
 // Register Service

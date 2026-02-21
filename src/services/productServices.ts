@@ -4,9 +4,13 @@ import { initProducts } from "../productsData/products";
 import productModel from "../models/productModel";
 
 export const seedInitialProducts = async () => {
-	const products = await getAllProducts();
-	if (products.length === 0) {
-		await productModel.insertMany(initProducts);
+	try {
+		const products = await getAllProducts();
+		if (products.length === 0) {
+			await productModel.insertMany(initProducts);
+		}
+	} catch (err) {
+		console.error("can't see DB", err);
 	}
 };
 
