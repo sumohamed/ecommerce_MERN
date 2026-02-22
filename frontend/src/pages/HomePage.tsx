@@ -2,8 +2,7 @@ import { Container, Grid, Box } from "@mui/material";
 import ProductCard from "../components/ProductCard";
 import { useEffect, useState } from "react";
 import type { Product } from "../types/Product";
-
-const api_url = import.meta.env.VITE_BASE_URL;
+import { api_url } from "../constants/api_url";
 
 const HomePage = () => {
 	const [products, setProducts] = useState<Product[]>([]);

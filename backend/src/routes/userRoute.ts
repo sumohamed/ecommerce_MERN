@@ -15,9 +15,9 @@ router.post("/register", async (req, res) => {
 		});
 
 		// send data
-		res.status(statusCode).send(data);
+		res.status(statusCode).json(data);
 	} catch {
-		res.status(500).send("Something went Wrong");
+		res.status(500).json("Something went Wrong");
 	}
 });
 
@@ -32,9 +32,9 @@ router.post("/login", async (req, res) => {
 		});
 
 		// send data
-		res.status(statusCode).send(data);
+		res.status(statusCode).json(data);
 	} catch {
-		res.status(500).send("Something went Wrong");
+		res.status(500).json("Something went Wrong");
 	}
 });
 
