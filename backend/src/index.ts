@@ -6,13 +6,14 @@ import userRoute from "./routes/userRoute";
 import productsRoute from "./routes/productsRoute";
 import shoppingCartRoute from "./routes/shoppingCartRoute";
 import { seedInitialProducts } from "./services/productServices";
-
+import cors from "cors";
 dotenv.config();
 
 const app = express();
 const port = 3001;
 
 app.use(express.json()); // middleware for json objects
+app.use(cors());
 
 // Database connection
 mongoose
@@ -23,7 +24,7 @@ mongoose
 // create static folder for images
 app.use(
 	"/uploads",
-	express.static(path.join(__dirname, "productsData/images")),
+	express.static(path.join(process.cwd(), "productsData/images")),
 );
 seedInitialProducts();
 

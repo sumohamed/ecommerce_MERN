@@ -1,6 +1,5 @@
 // AS A dashboard -> adding product to DB to sell it
-
-import { initProducts } from "../productsData/products";
+import { initProducts } from "../../productsData/products";
 import productModel from "../models/productModel";
 
 export const seedInitialProducts = async () => {
