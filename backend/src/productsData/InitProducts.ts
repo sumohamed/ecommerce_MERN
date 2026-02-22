@@ -1,4 +1,4 @@
-export const initProducts = [
+const InitProducts = [
 	{
 		title: "Apple Watch",
 		image: "appleWatch.jpg",
@@ -36,3 +36,5 @@ export const initProducts = [
 		stock: 400,
 	},
 ];
+
+export default InitProducts;

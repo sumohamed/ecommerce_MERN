@@ -1,12 +1,12 @@
 // AS A dashboard -> adding product to DB to sell it
-import { initProducts } from "../../productsData/products";
+import InitProducts from "../productsData/InitProducts";
 import productModel from "../models/productModel";
 
 export const seedInitialProducts = async () => {
 	try {
 		const products = await getAllProducts();
 		if (products.length === 0) {
-			await productModel.insertMany(initProducts);
+			await productModel.insertMany(InitProducts);
 		}
 	} catch (err) {
 		console.error("can't see DB", err);
