@@ -10,6 +10,8 @@ const AuthProvider: FC<PropsWithChildren> = ({ children }) => {
 		localStorage.getItem("token"),
 	);
 
+	const isAuthenticated = !!token;
+
 	// Auto login fn when new user register
 	const login = (username: string, token: string) => {
 		setUsername(username);
@@ -21,7 +23,7 @@ const AuthProvider: FC<PropsWithChildren> = ({ children }) => {
 	};
 
 	return (
-		<AuthContext.Provider value={{ username, token, login }}>
+		<AuthContext.Provider value={{ username, token, isAuthenticated, login }}>
 			{children}
 		</AuthContext.Provider>
 	);

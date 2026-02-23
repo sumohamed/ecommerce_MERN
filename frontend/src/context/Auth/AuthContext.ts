@@ -7,12 +7,14 @@ interface AuthContextType {
 	username: string | null;
 	token: string | null;
 	login: (username: string, token: string) => void;
+	isAuthenticated: boolean;
 }
 
 export const AuthContext = createContext<AuthContextType>({
 	username: null,
 	token: null,
 	login: () => {},
+	isAuthenticated: false,
 }); // [data storage] -> when useAuth hook gets data will be saved here to use in other pages using import..
 
 export const useAuth = () => useContext(AuthContext); // get and send user data [operation logic of getting and sending data]

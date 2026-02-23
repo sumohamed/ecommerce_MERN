@@ -4,36 +4,35 @@ import { api_url } from "../constants/api_url";
 import { useAuth } from "../context/Auth/AuthContext";
 import { useNavigate } from "react-router-dom";
 
-const RegisterPage = () => {
+const LoginPage = () => {
 	const [err, setErr] = useState("");
 	const { login } = useAuth();
-	const navigate = useNavigate();
+
 	// getting input field values
-	const fNameRef = useRef<HTMLInputElement>(null);
-	const lNameRef = useRef<HTMLInputElement>(null);
 	const emailRef = useRef<HTMLInputElement>(null);
 	const passwordRef = useRef<HTMLInputElement>(null);
+
+	// Navigation
+	const navigate = useNavigate();
 
 	// Submit handler
 	const handelRegister = async () => {
 		// get values of input user
-		const firstName = fNameRef.current?.value;
-		const lastName = lNameRef.current?.value;
 		const email = emailRef.current?.value;
 		const password = passwordRef.current?.value;
 
 		// check if user add all required fields
-		if (!firstName || !lastName || !email || !password) {
+		if (!email || !password) {
 			setErr("please check your data!");
 			return;
 		}
 
 		// send user data into DB..
 		try {
-			const response = await fetch(`${api_url}/user/register`, {
+			const response = await fetch(`${api_url}/user/login`, {
 				method: "POST",
 				headers: { "Content-Type": "application/json" },
-				body: JSON.stringify({ firstName, lastName, email, password }),
+				body: JSON.stringify({ email, password }),
 			}); // sending data with its request details
 
 			if (!response.ok) {
@@ -50,12 +49,12 @@ const RegisterPage = () => {
 
 			login(email, token); // login operation to send him into homepage as logged in user coming from useAuth hook
 
-			// redirect to homepage
+			// Redirect to otherpage
 			navigate("/");
 
-			console.log("Register success:", token);
+			console.log("Login success:", token);
 		} catch (err) {
-			console.error("Register failed:", err);
+			console.error("Login failed:", err);
 		}
 	};
 
@@ -70,7 +69,7 @@ const RegisterPage = () => {
 					mt: 4,
 				}}
 			>
-				<Typography variant="h4">Register New Account</Typography>
+				<Typography variant="h4">Login to Your Account</Typography>
 				<Box
 					sx={{
 						display: "flex",
@@ -83,16 +82,6 @@ const RegisterPage = () => {
 						borderRadius: 1,
 					}}
 				>
-					<TextField
-						inputRef={fNameRef}
-						label="First name"
-						name="firstName"
-					/>
-					<TextField
-						inputRef={lNameRef}
-						label="Last name"
-						name="lastName"
-					/>
 					<TextField inputRef={emailRef} label="Email" name="email" />
 					<TextField
 						inputRef={passwordRef}
@@ -100,7 +89,7 @@ const RegisterPage = () => {
 						name="password"
 					/>
 					<Button onClick={handelRegister} variant="contained">
-						Register
+						Login
 					</Button>
 					{err && <Typography sx={{ color: "red" }}>{err}</Typography>}
 				</Box>
@@ -109,4 +98,4 @@ const RegisterPage = () => {
 	);
 };
 
-export default RegisterPage;
+export default LoginPage;
