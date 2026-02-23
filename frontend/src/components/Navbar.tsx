@@ -10,10 +10,15 @@ import Avatar from "@mui/material/Avatar";
 import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
 import AdbIcon from "@mui/icons-material/Adb";
+import { useAuth } from "../context/Auth/AuthContext";
 
 const settings = ["Profile", "Account", "Dashboard", "Logout"];
 
 const Navbar = () => {
+	// Passing auth into navbar
+	const { username, token } = useAuth();
+	console.log("from navbar", { username, token });
+
 	const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(
 		null,
 	);
