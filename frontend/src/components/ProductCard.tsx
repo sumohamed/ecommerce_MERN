@@ -4,17 +4,20 @@ import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
+import { useCart } from "../context/Cart/CartContext";
 
 const img_url = import.meta.env.VITE_IMAGE_URL;
 
 interface Props {
-	// id: string;
+	_id: string;
 	title: string;
 	image: string;
 	price: number;
 }
 
-const ProductCard = ({ title, image, price }: Props) => {
+const ProductCard = ({ _id, title, image, price }: Props) => {
+	const { addItemToCart } = useCart();
+
 	return (
 		<Card sx={{ maxWidth: 345 }}>
 			<CardMedia
@@ -31,7 +34,11 @@ const ProductCard = ({ title, image, price }: Props) => {
 				</Typography>
 			</CardContent>
 			<CardActions>
-				<Button variant="contained" size="small">
+				<Button
+					variant="contained"
+					size="small"
+					onClick={() => addItemToCart(_id)}
+				>
 					Add to cart
 				</Button>
 			</CardActions>

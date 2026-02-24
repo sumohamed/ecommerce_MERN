@@ -6,21 +6,24 @@ import AuthProvider from "./context/Auth/AuthProvider";
 import LoginPage from "./pages/LoginPage";
 import ShoppingCartPage from "./pages/ShoppingCartPage";
 import ProtectedRoute from "./components/ProtectedRoute";
+import CartProvider from "./context/Cart/CartProvider";
 
 const App = () => {
 	return (
 		<AuthProvider>
-			<BrowserRouter>
-				<Navbar />
-				<Routes>
-					<Route path="/" element={<HomePage />} />
-					<Route path="/register" element={<RegisterPage />} />
-					<Route path="/login" element={<LoginPage />} />
-					<Route element={<ProtectedRoute />}>
-						<Route path="/cart" element={<ShoppingCartPage />} />
-					</Route>
-				</Routes>
-			</BrowserRouter>
+			<CartProvider>
+				<BrowserRouter>
+					<Navbar />
+					<Routes>
+						<Route path="/" element={<HomePage />} />
+						<Route path="/register" element={<RegisterPage />} />
+						<Route path="/login" element={<LoginPage />} />
+						<Route element={<ProtectedRoute />}>
+							<Route path="/cart" element={<ShoppingCartPage />} />
+						</Route>
+					</Routes>
+				</BrowserRouter>
+			</CartProvider>
 		</AuthProvider>
 	);
 };
