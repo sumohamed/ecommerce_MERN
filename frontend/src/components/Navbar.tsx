@@ -1,18 +1,23 @@
 import * as React from "react";
-import AppBar from "@mui/material/AppBar";
-import Box from "@mui/material/Box";
-import Toolbar from "@mui/material/Toolbar";
-import IconButton from "@mui/material/IconButton";
-import Typography from "@mui/material/Typography";
-import Menu from "@mui/material/Menu";
-import Container from "@mui/material/Container";
-import Avatar from "@mui/material/Avatar";
-import Tooltip from "@mui/material/Tooltip";
-import MenuItem from "@mui/material/MenuItem";
-import AdbIcon from "@mui/icons-material/Adb";
-import { useAuth } from "../context/Auth/AuthContext";
-import { Button, Grid } from "@mui/material";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../context/Auth/AuthContext";
+import AdbIcon from "@mui/icons-material/Adb";
+import ShoppingCart from "@mui/icons-material/ShoppingCart";
+import {
+	MenuItem,
+	Tooltip,
+	Avatar,
+	Menu,
+	Container,
+	Button,
+	Grid,
+	AppBar,
+	Box,
+	Toolbar,
+	IconButton,
+	Typography,
+	Badge,
+} from "@mui/material";
 
 const Navbar = () => {
 	// Passing auth into navbar
@@ -27,6 +32,10 @@ const Navbar = () => {
 		logout();
 		navigate("/");
 		handleCloseUserMenu();
+	};
+
+	const handleShoppingCart = () => {
+		navigate("/cart");
 	};
 
 	const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(
@@ -69,9 +78,25 @@ const Navbar = () => {
 								Tech Hub
 							</Typography>
 						</Box>
-						<Box sx={{ flexGrow: 0 }}>
+						<Box
+							sx={{
+								display: "flex",
+								flexGrow: 0,
+								alignItems: "center",
+								justifyContent: "center",
+								gap: 4,
+							}}
+						>
 							{isAuthenticated ? (
 								<>
+									<IconButton
+										aria-label="shopping-cart"
+										onClick={handleShoppingCart}
+									>
+										<Badge badgeContent={4} color="secondary">
+											<ShoppingCart sx={{ color: "#fff" }} />
+										</Badge>
+									</IconButton>
 									<Tooltip title="Open settings">
 										<Grid
 											container
