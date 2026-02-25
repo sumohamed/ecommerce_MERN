@@ -18,8 +18,11 @@ import {
 	Typography,
 	Badge,
 } from "@mui/material";
+import { useCart } from "../context/Cart/CartContext";
 
 const Navbar = () => {
+	const { cartItems } = useCart();
+
 	// Passing auth into navbar
 	const { username, isAuthenticated, logout } = useAuth();
 
@@ -62,22 +65,29 @@ const Navbar = () => {
 							width: "100%",
 						}}
 					>
-						<Box sx={{ display: "flex", alignItems: "center" }}>
-							<AdbIcon sx={{ display: "flex", mr: 1 }} />
-							<Typography
-								variant="h6"
-								noWrap
-								component="a"
-								sx={{
-									mr: 2,
-									display: "flex",
-									fontFamily: "monospace",
-									fontWeight: 700,
-								}}
-							>
-								Tech Hub
-							</Typography>
-						</Box>
+						<Button
+							className="logo"
+							sx={{ color: "#fff" }}
+							variant="text"
+							onClick={() => navigate("/")}
+						>
+							<Box sx={{ display: "flex", alignItems: "center" }}>
+								<AdbIcon sx={{ display: "flex", mr: 1 }} />
+								<Typography
+									variant="h6"
+									noWrap
+									component="a"
+									sx={{
+										mr: 2,
+										display: "flex",
+										fontFamily: "monospace",
+										fontWeight: 700,
+									}}
+								>
+									Tech Hub
+								</Typography>
+							</Box>
+						</Button>
 						<Box
 							sx={{
 								display: "flex",
@@ -93,7 +103,10 @@ const Navbar = () => {
 										aria-label="shopping-cart"
 										onClick={handleShoppingCart}
 									>
-										<Badge badgeContent={4} color="secondary">
+										<Badge
+											badgeContent={cartItems.length}
+											color="secondary"
+										>
 											<ShoppingCart sx={{ color: "#fff" }} />
 										</Badge>
 									</IconButton>
