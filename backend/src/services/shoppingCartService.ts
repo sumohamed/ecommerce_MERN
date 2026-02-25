@@ -15,11 +15,20 @@ const createShoppingCart = async ({ userId }: createShoppingCartParams) => {
 // 2. Get Active cart from database
 interface getActiveShoppingCartParams {
 	userId: string;
+	populateProduct?: boolean;
 }
 export const getActiveShoppingCartForUser = async ({
 	userId,
+	populateProduct,
 }: getActiveShoppingCartParams) => {
-	let cart = await shoppingCartModel.findOne({ userId, status: "active" }); // search
+	let cart;
+	if (populateProduct) {
+		cart = await shoppingCartModel
+			.findOne({ userId, status: "active" })
+			.populate("items.product"); // search and return product data to use it in frontend when user adds item to cart
+	} else {
+		cart = await shoppingCartModel.findOne({ userId, status: "active" }); // search
+	}
 
 	if (!cart) {
 		cart = await createShoppingCart({ userId }); // create if no cart in DB
@@ -70,8 +79,16 @@ export const addItemToShoppingCart = async ({
 		// Upate total Amount of cart
 		cart.totalAmount += product.price * quantity;
 
-		const updatedCart = await cart.save();
-		return { data: updatedCart, statusCode: 201 };
+		await cart.save();
+
+		return {
+			// return full product details for frontend ..
+			data: await getActiveShoppingCartForUser({
+				userId,
+				populateProduct: true,
+			}),
+			statusCode: 201,
+		};
 	} catch {
 		return { data: "something went Wrong", statusCode: 500 };
 	}
@@ -126,8 +143,14 @@ export const updateItemInCart = async ({
 		cart.totalAmount = total;
 
 		// Update and return the new cart
-		const updatedCart = await cart.save();
-		return { data: updatedCart, statusCode: 200 };
+		await cart.save();
+		return {
+			data: await getActiveShoppingCartForUser({
+				userId,
+				populateProduct: true,
+			}),
+			statusCode: 200,
+		};
 	} catch {
 		return { data: "something went Wrong", statusCode: 500 };
 	}
@@ -168,8 +191,14 @@ export const deleteItemInCart = async ({
 		cart.totalAmount = total;
 
 		// Update and return the new cart
-		const updatedCart = await cart.save();
-		return { data: updatedCart, statusCode: 200 };
+		await cart.save();
+		return {
+			data: await getActiveShoppingCartForUser({
+				userId,
+				populateProduct: true,
+			}),
+			statusCode: 200,
+		};
 	} catch {
 		return { data: "something went Wrong", statusCode: 500 };
 	}

@@ -18,7 +18,10 @@ router.get("/", validateJWT, async (req: ExtendRequest, res) => {
 		// get userId from validateJWT data..
 		const userId = req?.user?._id;
 		// get the active cart
-		const cart = await getActiveShoppingCartForUser({ userId });
+		const cart = await getActiveShoppingCartForUser({
+			userId,
+			populateProduct: true,
+		});
 		// send the cart
 		res.status(200).json(cart);
 	} catch {
