@@ -5,8 +5,7 @@ import CardMedia from "@mui/material/CardMedia";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import { useCart } from "../context/Cart/CartContext";
-
-const img_url = import.meta.env.VITE_IMAGE_URL;
+import { img_url } from "../constants/api_url";
 
 interface Props {
 	_id: string;

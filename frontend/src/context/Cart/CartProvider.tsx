@@ -34,16 +34,26 @@ const CartProvider: FC<PropsWithChildren> = ({ children }) => {
 			// what we need is product details and it's unit price according to quantity...
 			const cartItemsMapped = cart.items.map(
 				// eslint-disable-next-line @typescript-eslint/no-explicit-any
-				({ product, quantity }: { product: any; quantity: number }) => ({
+				({
+					product,
+					quantity,
+					unitPrice,
+				}: {
+					// eslint-disable-next-line @typescript-eslint/no-explicit-any
+					product: any;
+					quantity: number;
+					unitPrice: number;
+				}) => ({
 					productId: product._id,
 					title: product.title,
 					image: product.image,
-					unitPrice: product.unitPrice,
+					unitPrice,
 					quantity,
 				}),
 			);
 
 			setCartItems(cartItemsMapped);
+			setTotalAmount(cart.totalAmount);
 		};
 
 		fetchCart();
@@ -74,12 +84,20 @@ const CartProvider: FC<PropsWithChildren> = ({ children }) => {
 				setErr("Faild to parse cart data");
 			}
 			const cartItemsMapped = cart.items.map(
-				// eslint-disable-next-line @typescript-eslint/no-explicit-any
-				({ product, quantity }: { product: any; quantity: number }) => ({
+				({
+					product,
+					quantity,
+					unitPrice,
+				}: {
+					// eslint-disable-next-line @typescript-eslint/no-explicit-any
+					product: any;
+					quantity: number;
+					unitPrice: number;
+				}) => ({
 					productId: product._id,
 					title: product.title,
 					image: product.image,
-					unitPrice: product.unitPrice,
+					unitPrice,
 					quantity,
 				}),
 			);
@@ -91,8 +109,104 @@ const CartProvider: FC<PropsWithChildren> = ({ children }) => {
 		}
 	};
 
+	const updateItemInCart = async (productId: string, quantity: number) => {
+		try {
+			const response = await fetch(`${api_url}/cart/items`, {
+				method: "PUT",
+				headers: {
+					"Content-Type": "application/json",
+					Authorization: `Bearer ${token}`,
+				},
+				body: JSON.stringify({ productId, quantity }),
+			});
+
+			if (!response.ok) {
+				setErr("Faild to update cart");
+			}
+
+			const cart = await response.json();
+			if (!cart) {
+				setErr("Faild to parse cart data");
+			}
+
+			const cartItemsMapped = cart.items.map(
+				({
+					product,
+					quantity,
+					unitPrice,
+				}: {
+					// eslint-disable-next-line @typescript-eslint/no-explicit-any
+					product: any;
+					quantity: number;
+					unitPrice: number;
+				}) => ({
+					productId: product._id,
+					title: product.title,
+					image: product.image,
+					quantity,
+					unitPrice,
+				}),
+			);
+			setCartItems([...cartItemsMapped]);
+			setTotalAmount(cart.totalAmount);
+		} catch {
+			console.log(err);
+		}
+	};
+
+	const removeItemInCart = async (productId: string) => {
+		try {
+			const response = await fetch(`${api_url}/cart/items/${productId}`, {
+				method: "DELETE",
+				headers: {
+					Authorization: `Bearer ${token}`,
+				},
+			});
+
+			if (!response.ok) {
+				setErr("Faild to delete cart");
+			}
+
+			const cart = await response.json();
+			if (!cart) {
+				setErr("Faild to parse cart data");
+			}
+
+			const cartItemsMapped = cart.items.map(
+				({
+					product,
+					quantity,
+					unitPrice,
+				}: {
+					// eslint-disable-next-line @typescript-eslint/no-explicit-any
+					product: any;
+					quantity: number;
+					unitPrice: number;
+				}) => ({
+					productId: product._id,
+					title: product.title,
+					image: product.image,
+					quantity,
+					unitPrice,
+				}),
+			);
+			setCartItems([...cartItemsMapped]);
+			setTotalAmount(cart.totalAmount);
+		} catch {
+			console.log(err);
+		}
+	};
+
 	return (
-		<CartContext.Provider value={{ cartItems, totalAmount, addItemToCart }}>
+		<CartContext.Provider
+			value={{
+				cartItems,
+				totalAmount,
+				addItemToCart,
+				updateItemInCart,
+				removeItemInCart,
+			}}
+		>
 			{children}
 		</CartContext.Provider>
 	);
