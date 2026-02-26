@@ -7,6 +7,7 @@ import LoginPage from "./pages/LoginPage";
 import ShoppingCartPage from "./pages/ShoppingCartPage";
 import ProtectedRoute from "./components/ProtectedRoute";
 import CartProvider from "./context/Cart/CartProvider";
+import CheckoutPage from "./pages/CheckoutPage";
 
 const App = () => {
 	return (
@@ -20,6 +21,7 @@ const App = () => {
 						<Route path="/login" element={<LoginPage />} />
 						<Route element={<ProtectedRoute />}>
 							<Route path="/cart" element={<ShoppingCartPage />} />
+							<Route path="/checkout" element={<CheckoutPage />} />
 						</Route>
 					</Routes>
 				</BrowserRouter>

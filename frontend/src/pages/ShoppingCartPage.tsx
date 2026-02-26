@@ -1,8 +1,10 @@
 import { Box, ButtonGroup, Button, Container, Typography } from "@mui/material";
 import { useCart } from "../context/Cart/CartContext";
 import { img_url } from "../constants/api_url";
+import { useNavigate } from "react-router-dom";
 
 const ShoppingCartPage = () => {
+	const navigate = useNavigate();
 	const {
 		cartItems,
 		totalAmount,
@@ -19,6 +21,10 @@ const ShoppingCartPage = () => {
 
 	const handleRemoveItem = (productId: string) => {
 		removeItemInCart(productId);
+	};
+
+	const handleCheckout = () => {
+		navigate("/checkout");
 	};
 
 	return (
@@ -86,10 +92,17 @@ const ShoppingCartPage = () => {
 							</ButtonGroup>
 						</Box>
 					))}
-					<Box>
+					<Box
+						display="flex"
+						justifyContent="space-between"
+						alignItems="center"
+					>
 						<Typography variant="h4">
 							Total Amount: {totalAmount.toFixed(2)} EGP
 						</Typography>
+						<Button variant="contained" onClick={handleCheckout}>
+							Checkout
+						</Button>
 					</Box>
 				</Box>
 			) : (
