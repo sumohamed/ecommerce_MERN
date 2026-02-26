@@ -217,9 +217,15 @@ export const clearShoppingCart = async ({
 		cart.items = [];
 		cart.totalAmount = 0;
 
-		const updatedCart = await cart.save();
+		await cart.save();
 
-		return { data: updatedCart, statusCode: 200 };
+		return {
+			data: await getActiveShoppingCartForUser({
+				userId,
+				populateProduct: true,
+			}),
+			statusCode: 200,
+		};
 	} catch {
 		return { data: "something went Wrong", statusCode: 500 };
 	}
