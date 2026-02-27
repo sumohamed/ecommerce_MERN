@@ -8,6 +8,7 @@ import ShoppingCartPage from "./pages/ShoppingCartPage";
 import ProtectedRoute from "./components/ProtectedRoute";
 import CartProvider from "./context/Cart/CartProvider";
 import CheckoutPage from "./pages/CheckoutPage";
+import OrederSuccessPage from "./pages/OrederSuccessPage";
 
 const App = () => {
 	return (
@@ -22,6 +23,10 @@ const App = () => {
 						<Route element={<ProtectedRoute />}>
 							<Route path="/cart" element={<ShoppingCartPage />} />
 							<Route path="/checkout" element={<CheckoutPage />} />
+							<Route
+								path="/order-success"
+								element={<OrederSuccessPage />}
+							/>
 						</Route>
 					</Routes>
 				</BrowserRouter>
